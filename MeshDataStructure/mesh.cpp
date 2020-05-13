@@ -1,8 +1,18 @@
 
-
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <set>
+#include <map>
 #include <fstream>
-using namespace std;
+#include <algorithm>
+using std::cout;
+using std::vector;
+using std::set;
+using std::map;
+using std::string;
+using std::ifstream;
+using std::endl;
 
 struct Point {
     int pointTag;
@@ -401,9 +411,9 @@ int main() {
     const char *filename = "t4.msh";
     readMsh(filename, myMeshHead);
     double initTemp = 10;
-    double hotOriginTemp = 2500000;
+    double hotOriginTemp = 250;
     size_t hotOriginElement = 1415;
-    int passStep = 100;
+    int passStep = 10;
     HotPass(myMeshHead, initTemp, hotOriginTemp, hotOriginElement, passStep);
     return 0;
 }
