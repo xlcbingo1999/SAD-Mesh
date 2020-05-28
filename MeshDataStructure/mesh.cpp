@@ -113,6 +113,13 @@ struct Element {
     set<int> nearbyElement;
 };
 
+struct PartitionedEntities {
+    size_t numPartitions;
+    size_t numGhostEntities;
+    int ghostEntityTag;
+    int partition;
+};
+
 struct meshHead {
     string version;
     int filetype;
