@@ -1,18 +1,22 @@
 
+#include <algorithm>
+#include <fstream>
 #include <iostream>
+#include <map>
+#include <queue>
+#include <set>
 #include <string>
 #include <vector>
-#include <set>
-#include <map>
-#include <fstream>
-#include <algorithm>
+using std::cin;
 using std::cout;
-using std::vector;
-using std::set;
-using std::map;
-using std::string;
-using std::ifstream;
 using std::endl;
+using std::ifstream;
+using std::iterator;
+using std::map;
+using std::priority_queue;
+using std::set;
+using std::string;
+using std::vector;
 
 struct Point {
     int pointTag;
@@ -113,6 +117,13 @@ struct Element {
     set<int> nearbyElement;
 };
 
+struct ElementAttribute {
+    size_t elementIndex;
+    vector<string> elementAttributeName;
+    vector<string> elementAttributeClass;
+    vector<string> elementAttributeValue;
+};
+
 struct PartitionedEntities {
     size_t numPartitions;
     size_t numGhostEntities;
@@ -136,6 +147,7 @@ struct meshHead {
     Node *nodes;
     ElementSet elementsSet;
     Element *elements;
+    ElementAttribute *elementAttributesTable;
 };
 
 void readMsh(const char *filename, meshHead *myMeshHead) {
@@ -392,9 +404,9 @@ void HotPass(meshHead *myMeshHead, double initTemp, double hotOriginTemp, int ho
         for (int i = 1; i <= elementCount; ++i) {
             originTempStr[i] = currentStr[i];
         }
-        cout << "step " << step + 1<< ": " << endl;
+        cout << "step " << step + 1 << ": " << endl;
         for (int i = 1; i <= elementCount; ++i) {
-            if(originTempStr[i] != initTemp){
+            if (originTempStr[i] != initTemp) {
                 cout << i << ": " << originTempStr[i] << endl;
             }
         }
@@ -412,15 +424,115 @@ void HotPass(meshHead *myMeshHead, double initTemp, double hotOriginTemp, int ho
     // }
 }
 
+void addElementAttributes(string attributeName, meshHead *myMeshHead) {
+    // cout << "[[test]] " << myMeshHead->elementAttributesTable[0].elementAttributeName.size() << endl;
+    for (int perNameIndex = 0; perNameIndex < myMeshHead->elementAttributesTable[0].elementAttributeName.size(); ++perNameIndex) {
+        if (myMeshHead->elementAttributesTable[0].elementAttributeName[perNameIndex] == attributeName) {
+            cout << "Attribute Existed!\n";
+            return;
+        }
+    }
+    myMeshHead->elementAttributesTable[0].elementAttributeName.push_back(attributeName);
+    // cout << "[[test]] " << myMeshHead->elementAttributesTable[0].elementAttributeName.size() << endl;
+    string attributeClass;
+    string attributeValueDefault;
+    cout << "Please enter attributeClass(int/size_t/double/string/bool).\n";
+    cin >> attributeClass;
+    cout << "Please enter default attributeValue.\n";
+    cin >> attributeValueDefault;
+    priority_queue<size_t, std::vector<size_t>, std::greater<size_t> > attributeValueSpecialIndex;
+    string judge;
+    while (true) {
+        cout << "Continue to enter special attributeValue? [Y] / [N]\n";
+        judge = "";
+        cin >> judge;
+        if (judge == "n" || judge == "N") break;
+        cout << "Range to enter or one to enter? [R] / [O]\n";
+        judge = "";
+        cin >> judge;
+        if (judge == "R" || judge == "r") {
+            size_t start_index, end_index;
+            cout << "Please enter special attributeIndex start and end.\n";
+            cin >> start_index >> end_index;
+            if ((start_index > end_index) || (start_index > myMeshHead->elementsSet.maxElementTag || start_index < myMeshHead->elementsSet.minElementTag) || (end_index > myMeshHead->elementsSet.maxElementTag || end_index < myMeshHead->elementsSet.minElementTag)) {
+                cout << "Error! index out of range.\n";
+                continue;
+            }
+            for (int i = start_index; i <= end_index; ++i) {
+                attributeValueSpecialIndex.push(i);
+            }
+        }
+        if (judge == "O" || judge == "o") {
+            cout << "Please enter special attributeIndex.\n";
+            size_t specialIndex;
+            cin >> specialIndex;
+            if (specialIndex > myMeshHead->elementsSet.maxElementTag || specialIndex < myMeshHead->elementsSet.minElementTag) {
+                cout << "Error! index out of range.\n";
+                continue;
+            }
+            attributeValueSpecialIndex.push(specialIndex);
+        }
+    }
+    size_t current_special_index;
+
+    for (int i = myMeshHead->elementsSet.minElementTag; i <= myMeshHead->elementsSet.maxElementTag; ++i) {
+        myMeshHead->elementAttributesTable[i].elementIndex = i;
+        myMeshHead->elementAttributesTable[i].elementAttributeName.push_back(attributeName);
+        myMeshHead->elementAttributesTable[i].elementAttributeClass.push_back(attributeClass);
+        if (attributeValueSpecialIndex.empty()) {
+            myMeshHead->elementAttributesTable[i].elementAttributeValue.push_back(attributeValueDefault);
+        } else {
+            current_special_index = attributeValueSpecialIndex.top();
+            string attributeValueSpecial;
+            if (current_special_index == i) {
+                cout << "[" << current_special_index << "] : Please enter a special value in this position.\n";
+                cin >> attributeValueSpecial;
+                myMeshHead->elementAttributesTable[i].elementAttributeValue.push_back(attributeValueSpecial);
+                attributeValueSpecialIndex.pop();
+            } else {
+                myMeshHead->elementAttributesTable[i].elementAttributeValue.push_back(attributeValueDefault);
+            }
+        }
+    }
+}
+
+void setElementAttributes(meshHead *myMeshHead) {
+    string attribute_1;
+    size_t elementsCount = myMeshHead->elementsSet.maxElementTag + 1;
+    myMeshHead->elementAttributesTable = new ElementAttribute[elementsCount];
+    myMeshHead->elementAttributesTable[0].elementIndex = 0;
+    while (true) {
+        cout << "Please enter attributeName.[Enter 'quit' to quit]\n";
+        attribute_1 = "";
+        cin >> attribute_1;
+        if (attribute_1 == "quit") {
+            cout << "Finish set attributes. QUIT now.\n";
+            break;
+        }
+        addElementAttributes(attribute_1, myMeshHead);
+    }
+}
+
+void printElementAttributes(meshHead *myMeshHead) {
+    for (int i = myMeshHead->elementsSet.minElementTag; i <= myMeshHead->elementsSet.maxElementTag; ++i) {
+        cout << myMeshHead->elementAttributesTable[i].elementIndex << endl;
+        for (int j = 0; j < myMeshHead->elementAttributesTable[i].elementAttributeName.size(); ++j) {
+            cout << myMeshHead->elementAttributesTable[i].elementAttributeName[j] << "\t" << myMeshHead->elementAttributesTable[i].elementAttributeClass[j] << "\t" << myMeshHead->elementAttributesTable[i].elementAttributeValue[j] << endl;
+        }
+    }
+}
+
 int main() {
     meshHead realMeshHead;
     meshHead *myMeshHead = &realMeshHead;
     const char *filename = "t4.msh";
     readMsh(filename, myMeshHead);
-    double initTemp = 10;
-    double hotOriginTemp = 250;
-    size_t hotOriginElement = 1415;
-    int passStep = 10;
-    HotPass(myMeshHead, initTemp, hotOriginTemp, hotOriginElement, passStep);
+    setElementAttributes(myMeshHead);
+    printElementAttributes(myMeshHead);
+    // double initTemp = 10;
+    // double hotOriginTemp = 250;
+    // size_t hotOriginElement = 1415;
+    // int passStep = 10;
+    // HotPass(myMeshHead, initTemp, hotOriginTemp, hotOriginElement, passStep);
     return 0;
 }
