@@ -41,6 +41,7 @@ public:
     bool getOutputToFile();
 };
 
+
 diyUser::diyUser()
 {
     
@@ -92,7 +93,7 @@ bool diyUser::getOutputToFile() {
 }
 
 void diyUser::beginSave() {
-    infile2.open("result.txt", ios::out);
+    infile2.open("../result/result.txt", ios::out);
 }
     
 void diyUser::saveItem(double ret) {

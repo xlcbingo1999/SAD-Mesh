@@ -3,7 +3,8 @@
 
 #include "User.hpp"
 
-#define FILE_PATH "./TEST.msh" 
+#define FILE_PATH "../file/TEST.msh" 
+#define FILE_PATH_HALF "../file/" 
 
 User::User(/* args */)
 {
@@ -19,13 +20,15 @@ User::~User()
 
 bool User::importApplication() {
     cout << "Step 1: Apply for importing.\n" << "Please input you file name: ";
-    // TODO
-    string to_open = FILE_PATH;
-    cin >> to_open;
+    string to_open = FILE_PATH_HALF;
+    string appen;
+    cin >> appen;
+    to_open += appen;
+    string default_to_open = FILE_PATH;
     if( importApplicationToFileManager(to_open) == false ){
         return false;
     } else {
-        cout << "\n";
+        if(importApplicationToFileManager(default_to_open) == false) return false;
         return true;
     }
 }
