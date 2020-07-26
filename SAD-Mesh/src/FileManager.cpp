@@ -1,7 +1,7 @@
 #ifndef FILEMANAGER_CPP
 #define FILEMANAGER_CPP
-
 #include "FileManager.hpp"
+#define FILE_PATH_HALF "../file/"
 
 FileManager fileManager;
 ifstream infile;
@@ -17,15 +17,43 @@ FileManager::FileManager() {
 FileManager::~FileManager() {
 }
 
-bool FileManager::receiveImportApplication(string to_open) {
+bool FileManager::receiveImportApplication() {
+    cout << "\n\nStep: Apply for importing.\n" << "Please input you file name: ";
+    string to_open = FILE_PATH_HALF;
+    string appen;
+    cin >> appen;
+    to_open += appen;
+    if(receiveImportFileName(to_open) == false) return false;
+    return true;
+}
+
+bool FileManager::receiveImportFileName(string to_open) {
     cout << "to_open: " << to_open << "\n";
     if (to_open == "")
         return false;
     else {
         fileName = to_open;
-        cout << "Your Application is received.\n";
+        cout << "Your Application is received. The file has been opened.\n";
         return true;
     }
+}
+
+bool FileManager::receiveChooseDataStruct() {
+    cout << "\n\nStep: Choose Data Struct Type.\n";
+    string *dataStructType;
+    int dataStructOptionCount;
+    dataStructOptionCount = getDataStructOptionCount();
+    dataStructType = new string[dataStructOptionCount];
+    cout << "\n****************Optional Data Struct Table****************\n\n";
+    for(int i = 0; i < dataStructOptionCount; ++i) {
+        cout << "["<<  i <<"]" << "\t" << getDataStructOption(i) << "\n";
+    }
+    cout << "\n**********************************************************\n";
+    cout << "Input your datastruct ID you like. For example: [0] Gmsh\n";
+    int did;
+    cin >> did;
+    if(usingDataStruct(did) == false) return false;
+    return true;
 }
 
 int FileManager::getDataStructOptionCount() {
@@ -254,12 +282,17 @@ bool FileManager::importElement() {
 bool FileManager::beginImporting() {
     meshHead *myMeshHead = &realMeshHead;
     infile.open(fileName);
+    if(!infile) {
+        cout << "No existed file!\n";
+        return false;
+    }
     string str;
     bool result;
-    cout << "Reading from the file.\n";
+    cout << "\n\nStep: Reading from the file.\n";
     int index;
     float viceFloat;
     int viceInt;
+    string viceString;
     while (infile.good()) {
         getline(infile, str);
         if (str == "$MeshFormat") {
@@ -275,6 +308,7 @@ bool FileManager::beginImporting() {
             if ((result = importElement()) == false) return false;
         }
     }
+
     infile.close();
     return true;
 }
@@ -384,6 +418,7 @@ void FileManager::outputElement() {
 }
 
 void FileManager::outputDataStruct() {
+    cout << "\n\nStep: Output Mesh file data struct.\n";
     meshHead *myMeshHead = &realMeshHead;
     cout << "$MeshFormat\n"
          << myMeshHead->version << " " << myMeshHead->filetype << " " << myMeshHead->datalength << "\n$EndMeshFormat\n";
@@ -395,6 +430,19 @@ void FileManager::outputDataStruct() {
     outputVolume();
     outputNode();
     outputElement();
+}
+
+void FileManager::diyBeginSignal() {
+    cout << "\n\nStep: Begin to run your diy code.\n" << "Now you have to write your code in TO-DO area in TEST.cpp file.\n" << "And we will use your code to exec!\n" << "Hope you write all good code.\n";
+}
+
+void FileManager::signIn() {
+    cout << "\n\n-------------------------Mesh System---------------------------\n" << "User signs in Mesh System successfully!\n" ;
+    cout << "Next Step is to apply for importing.\n";
+}
+
+void FileManager::signOut() {
+    cout << "\n\nUser signs Out. Thank you for your using.\n"  << "-------------------------Mesh System---------------------------\n" ;
 }
 
 #endif

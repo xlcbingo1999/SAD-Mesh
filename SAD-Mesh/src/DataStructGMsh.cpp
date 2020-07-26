@@ -27,5 +27,21 @@ CurveDescription* CurveCatalog::getDescription(int tag){
     }
 }
 
+CurveCatalog::CurveCatalog() {
+
+}
+
+CurveCatalog::~CurveCatalog() {
+
+}
+
+PointCatalog::PointCatalog() {
+
+}
+
+PointCatalog::~PointCatalog() {
+    
+}
+
 
 #endif

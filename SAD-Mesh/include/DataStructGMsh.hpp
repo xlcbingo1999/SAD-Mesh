@@ -21,8 +21,7 @@ struct PointDescription {
     int physicalTag;
 };
 
-class CurveDescription {
-public:
+struct CurveDescription {
     int curveTag;
     double startx;
     double starty;
@@ -41,6 +40,8 @@ class PointCatalog {
 private:
     map<int,PointDescription*> catalogMap;
 public:
+    PointCatalog();
+    ~PointCatalog();
     void insert(std::pair<int,PointDescription*>);
     PointDescription* getDescription(int);
 };
@@ -49,13 +50,14 @@ class CurveCatalog {
 private:
     map<int,CurveDescription*> catalogMap;
 public:
+    CurveCatalog();
+    ~CurveCatalog();
     void insert(std::pair<int,CurveDescription*>);
     CurveDescription* getDescription(int);    
 };
 
 
-class Surface {
-public:
+struct Surface {
     int surfaceTag;
     double startx;
     double starty;
@@ -70,8 +72,7 @@ public:
     int *pointsLine;
 };
 
-class Volume {
-public:
+struct Volume {
     int volumeTag;
     double startx;
     double starty;
@@ -85,16 +86,14 @@ public:
     int *surfaces;
 };
 
-class Node {
-public:
+struct Node {
     double x;
     double y;
     double z;
     vector<int> connectedElements;
 };
 
-class EntityBlockNode {
-public:
+struct EntityBlockNode {
     int entityDim;
     int entityTag;
     int parametric;
@@ -102,8 +101,7 @@ public:
     size_t *nodesIndex;
 };
 
-class NodeSet {
-public:
+struct NodeSet {
     size_t numEntityBlocks;
     size_t numNodes;
     size_t minNodeTag;
@@ -111,8 +109,7 @@ public:
     EntityBlockNode *entityblocks;
 };
 
-class EntityBlockElement {
-public:
+struct EntityBlockElement {
     int entityDim;
     int entityTag;
     int elementType;
@@ -120,8 +117,7 @@ public:
     size_t *elementsIndex;
 };
 
-class ElementSet {
-public:
+struct ElementSet {
     size_t numEntityBlocks;
     size_t numElements;
     size_t minElementTag;
@@ -129,32 +125,28 @@ public:
     EntityBlockElement *entityblocks;
 };
 
-class Element {
-public:
+struct Element {
     int entityDim;
     size_t *nodesIndex;
     size_t *nearbyEntityDim;
     set<int> nearbyElement;
 };
 
-class ElementAttribute {
-public:
+struct ElementAttribute {
     size_t elementIndex;
     vector<string> elementAttributeName;
     vector<string> elementAttributeClass;
     vector<string> elementAttributeValue;
 };
 
-class PartitionedEntities {
-public:
+struct PartitionedEntities {
     size_t numPartitions;
     size_t numGhostEntities;
     int ghostEntityTag;
     int partition;
 };
 
-class meshHead {
-public:
+struct meshHead {
     string version;
     int filetype;
     int datalength;

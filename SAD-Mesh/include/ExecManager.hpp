@@ -35,6 +35,8 @@ private:
     enum Form form;
 
 public:
+    ExecManager();
+    ~ExecManager();
     int add_coef(struct Coefficient * c); // 添加系数
     int add_attr(enum Attr a); // 添加属性
     int set_form(Form f); // 设置计算模式

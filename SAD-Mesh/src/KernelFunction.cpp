@@ -29,17 +29,18 @@ public:
     int add_attr(enum Attr a); 
     int set_form(Form f);
 
-    double Execute(struct ArguMap** argus, int index); // virtual 函数，必须实现
+    double Execute(struct ArguMap** argus, int index); // 开始执行计算。virtual 函数，必须实现
 
-    void displayResult(int ref, double ret); // virtual 函数，必须实现
+    void displayResult(int ref, double ret); // 打印结果，本实验的输出会比较长。virtual 函数，必须实现
 
-    void beginSave(); // virtual 函数，必须实现
-    void saveItem(double ret); // virtual 函数，必须实现
-    void endSave(); // virtual 函数，必须实现
+    void beginSave(); // 开始写入文件。virtual 函数，必须实现
+    void saveItem(double ret); // 逐次写入文件。virtual 函数，必须实现
+    void endSave(); // 结束写入文件。virtual 函数，必须实现
 
-    void setOutputToFile();
-    bool getOutputToFile();
+    void setOutputToFile(); // 设置让结果写入到文件
+    bool getOutputToFile(); // 获得写入文件的表指
 };
+
 
 diyUser::diyUser()
 {
@@ -92,7 +93,7 @@ bool diyUser::getOutputToFile() {
 }
 
 void diyUser::beginSave() {
-    infile2.open("result.txt", ios::out);
+    infile2.open("../result/result.txt", ios::out);
 }
     
 void diyUser::saveItem(double ret) {
@@ -122,7 +123,7 @@ int main() {
     if(MAS.importApplication() == false) return -1;
     if(MAS.chooseDataStruct() == false) return -1;
     if(MAS.beginImporting() == false) return -1;
-    // MAS.outputDataStruct(); // 输出
+    MAS.outputDataStruct(); // 输出，可能会比较长！
     MAS.diy();
 
 /***********************************************************************
@@ -153,8 +154,8 @@ int main() {
     MAS.add_coef(coef1);
     // 设置运算属性
     MAS.add_attr(ADDARGU);
-    // 设置结果计算方法，即所有相邻原件的影响的平均值
     MAS.add_attr(END);
+    // 设置结果计算方法，即所有相邻原件的影响的平均值
     MAS.set_form(AVG);
 
 /*********************************************************************
@@ -181,6 +182,7 @@ int main() {
     if(MAS.getOutputToFile() == true) {
         MAS.endSave();
     }
+
     // Execute(&express, maplist, myMeshHead, 0);
 
     return 0;

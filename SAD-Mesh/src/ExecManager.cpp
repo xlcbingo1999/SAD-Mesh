@@ -4,6 +4,14 @@
 
 ExecManager execManager;
 
+ExecManager::ExecManager() {
+
+}
+
+ExecManager::~ExecManager() {
+    
+}
+
 ArguMap* ExecManager::getNewArguMap(unsigned long long num, double init = 0) {
     struct ArguMap* map = new ArguMap();
     map->num = num;

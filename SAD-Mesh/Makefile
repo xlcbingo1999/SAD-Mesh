@@ -7,7 +7,7 @@ BIN_DIR := bin
 INCLUDE := -I./$(INC_DIR)
 
 
-$(BIN_DIR)/main: $(BUILD_DIR)/DataStructGMsh.o $(BUILD_DIR)/ExecManager.o $(BUILD_DIR)/FileManager.o $(BUILD_DIR)/User.o  $(BUILD_DIR)/MeshTest.o 
+$(BIN_DIR)/main: $(BUILD_DIR)/DataStructGMsh.o $(BUILD_DIR)/ExecManager.o $(BUILD_DIR)/FileManager.o $(BUILD_DIR)/User.o  $(BUILD_DIR)/KernelFunction.o 
 	@mkdir -p $(BIN_DIR)
 	$(CC) $(FLAGS) $(INCLUDE) $^ -o $@
 

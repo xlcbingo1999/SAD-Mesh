@@ -1,13 +1,8 @@
 #ifndef USER_HPP
 #define USER_HPP
-#include <iostream>
-#include <string>
+
 #include "FileManager.hpp"
 #include "ExecManager.hpp"
-
-using std::cin;
-using std::cout;
-using std::string;
 
 class User
 {

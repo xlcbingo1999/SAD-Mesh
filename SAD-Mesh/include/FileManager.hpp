@@ -41,19 +41,21 @@ private:
     void outputSurface();
     void outputVolume();
     void outputNode();
-    void outputElement();    
+    void outputElement();
+    bool receiveImportFileName(string to_open);
+    int getDataStructOptionCount();
+    string getDataStructOption(int did);
+    bool usingDataStruct(int did);  
 public:
     FileManager();
     ~FileManager();
-    bool receiveImportApplication(string to_open);
-
-    int getDataStructOptionCount();
-    string getDataStructOption(int did);
-    bool usingDataStruct(int did);
-
+    bool receiveImportApplication();
+    bool receiveChooseDataStruct();
     bool beginImporting();
-
     void outputDataStruct();
+    void diyBeginSignal();
+    void signIn();
+    void signOut();
 };
 
 extern FileManager fileManager;
