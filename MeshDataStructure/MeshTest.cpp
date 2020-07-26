@@ -122,7 +122,7 @@ int main() {
     if(MAS.importApplication() == false) return -1;
     if(MAS.chooseDataStruct() == false) return -1;
     if(MAS.beginImporting() == false) return -1;
-    // MAS.outputDataStruct(); // 输出
+    MAS.outputDataStruct(); // 输出
     MAS.diy();
 
 /***********************************************************************
@@ -153,8 +153,8 @@ int main() {
     MAS.add_coef(coef1);
     // 设置运算属性
     MAS.add_attr(ADDARGU);
-    // 设置结果计算方法，即所有相邻原件的影响的平均值
     MAS.add_attr(END);
+    // 设置结果计算方法，即所有相邻原件的影响的平均值
     MAS.set_form(AVG);
 
 /*********************************************************************
